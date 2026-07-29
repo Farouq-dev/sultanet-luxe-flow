@@ -70,7 +70,7 @@ function ProductPage() {
           <p className="mt-6 leading-relaxed text-muted-foreground">{product.description}</p>
 
           <ul className="mt-6 grid gap-2">
-            {product.features.map((f) => (
+            {product.features.map((f: string) => (
               <li key={f} className="flex items-center gap-2 text-sm">
                 <Check className="h-4 w-4 text-primary" /> {f}
               </li>
