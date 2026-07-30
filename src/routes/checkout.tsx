@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { CreditCard, Lock } from "lucide-react";
+import { CreditCard, Lock, Gift } from "lucide-react";
 import { toast } from "sonner";
 import { useShop } from "@/stores/shop";
-import { findProduct } from "@/lib/data";
+import { useCart } from "@/hooks/useCart";
 import { formatMoney } from "@/lib/currency";
 
 export const Route = createFileRoute("/checkout")({
@@ -19,12 +19,9 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function Checkout() {
-  const { cart, currency, clearCart } = useShop();
+  const { clearCart } = useShop();
   const navigate = useNavigate();
-  const items = cart.map((c) => ({ ...c, product: findProduct(c.productId)! })).filter((i) => i.product);
-  const subtotal = items.reduce((s, i) => s + i.product.price * i.qty, 0);
-  const shipping = subtotal > 150 || subtotal === 0 ? 0 : 12;
-  const total = subtotal + shipping;
+  const { items, subtotal, shipping, total, currency } = useCart();
   const [loading, setLoading] = useState(false);
 
   const submit = (e: React.FormEvent) => {
@@ -36,6 +33,7 @@ function Checkout() {
       navigate({ to: "/order-tracking" });
     }, 900);
   };
+
 
   return (
     <div className="mx-auto max-w-6xl px-6 pb-24 pt-32">
@@ -80,8 +78,11 @@ function Checkout() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="line-clamp-1 text-sm font-medium">{i.product.name}</div>
-                  <div className="text-xs text-muted-foreground">{formatMoney(i.product.price, currency)}</div>
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    {i.gift ? (<><Gift className="h-3 w-3" /> Free gift</>) : formatMoney(i.product.price, currency)}
+                  </div>
                 </div>
+
               </li>
             ))}
           </ul>

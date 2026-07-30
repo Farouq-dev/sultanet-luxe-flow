@@ -17,7 +17,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { cart, wishlist, currency, setCurrency, theme, toggleTheme } = useShop();
+  const { cart, wishlist, currency, setCurrency, theme, toggleTheme, openCart } = useShop();
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
   useEffect(() => {
@@ -89,12 +89,24 @@ export function Navbar() {
             <Link to="/login" aria-label="Account" className="hidden h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent hover:text-foreground sm:grid">
               <User className="h-4.5 w-4.5" />
             </Link>
-            <Link to="/cart" aria-label="Cart" className="relative grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent hover:text-foreground">
+            <button onClick={openCart} aria-label="Cart" className="relative grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent hover:text-foreground">
               <ShoppingBag className="h-4.5 w-4.5" />
-              {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">{cartCount}</span>
-              )}
-            </Link>
+              <AnimatePresence>
+                {cartCount > 0 && (
+                  <motion.span
+                    key={cartCount}
+                    initial={{ scale: 0.4, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.4, opacity: 0 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 18 }}
+                    className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground"
+                  >
+                    {cartCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+
             <button onClick={() => setOpen(true)} aria-label="Menu" className="grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent lg:hidden">
               <Menu className="h-5 w-5" />
             </button>

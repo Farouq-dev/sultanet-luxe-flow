@@ -8,8 +8,9 @@ import { formatMoney } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
 export function ProductCard({ product }: { product: Product }) {
-  const { toggleWishlist, wishlist, addToCart, currency } = useShop();
+  const { toggleWishlist, wishlist, addToCart, currency, openCart, setQuickView } = useShop();
   const inWishlist = wishlist.includes(product.id);
+
   const discount = product.compareAt
     ? Math.round((1 - product.price / product.compareAt) * 100)
     : 0;
@@ -49,18 +50,20 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
         <div className="pointer-events-none absolute inset-x-3 bottom-3 flex translate-y-3 items-center gap-2 opacity-0 transition-all duration-500 group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
           <button
-            onClick={(e) => { e.preventDefault(); addToCart(product.id); toast.success(`${product.name} added to cart`); }}
+            onClick={(e) => { e.preventDefault(); addToCart(product.id); openCart(); toast.success(`${product.name} added to cart`); }}
             className="flex flex-1 items-center justify-center gap-2 rounded-full bg-primary py-2.5 text-xs font-semibold text-primary-foreground shadow-elegant transition hover:bg-primary/90"
           >
             <ShoppingBag className="h-3.5 w-3.5" /> Add to cart
           </button>
-          <Link
-            to="/product/$slug" params={{ slug: product.slug }}
+          <button
+            type="button"
+            onClick={(e) => { e.preventDefault(); setQuickView(product.slug); }}
             className="glass grid h-10 w-10 place-items-center rounded-full text-foreground"
             aria-label="Quick view"
           >
             <Eye className="h-4 w-4" />
-          </Link>
+          </button>
+
         </div>
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-5">

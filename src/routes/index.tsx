@@ -6,6 +6,11 @@ import heroImg from "@/assets/hero.jpg";
 import { bestSellers, categories, collections, featuredBrands, newArrivals, products } from "@/lib/data";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
+import { FlashSale } from "@/components/home/FlashSale";
+import { TrustStats } from "@/components/home/TrustStats";
+import { FAQ } from "@/components/home/FAQ";
+import { Scene3DSlot } from "@/components/three/Scene3DSlot";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,17 +31,21 @@ function Home() {
       <Marquee />
       <FeaturedCategories />
       <FeaturedProducts title="Featured" items={products.slice(0, 8)} eyebrow="Curated" />
+      <FlashSale />
       <CollectionShowcase />
       <FeaturedProducts title="Best Sellers" items={bestSellers()} eyebrow="Loved by thousands" />
+      <TrustStats />
       <WhyChoose />
       <FeaturedProducts title="New Arrivals" items={newArrivals()} eyebrow="Just landed" />
       <Reviews />
+      <FAQ />
       <Brands />
       <Newsletter />
       <Instagram />
     </>
   );
 }
+
 
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -49,7 +58,9 @@ function Hero() {
       <motion.div style={{ y, scale }} className="absolute inset-0">
         <img src={heroImg} alt="Premium wellness setup" className="h-full w-full object-cover" width={1600} height={1200} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#061222] via-[#061222]/60 to-transparent" />
+        <Scene3DSlot fallback={null} />
       </motion.div>
+
 
       <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-6 pb-20 pt-40 sm:pb-28">
         <motion.p

@@ -15,6 +15,11 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { SmoothScroll } from "../components/SmoothScroll";
 import { ScrollProgress } from "../components/ScrollProgress";
+import { AnnouncementBar } from "../components/AnnouncementBar";
+import { CartDrawer } from "../components/CartDrawer";
+import { QuickViewModal } from "../components/QuickViewModal";
+import { CursorGlow } from "../components/motion/CursorGlow";
+
 
 function NotFoundComponent() {
   return (
@@ -106,14 +111,19 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <SmoothScroll />
       <ScrollProgress />
+      <CursorGlow />
       <div className="flex min-h-screen flex-col">
+        <AnnouncementBar />
         <Navbar />
         <main className="flex-1">
           <Outlet />
         </main>
         <Footer />
       </div>
+      <CartDrawer />
+      <QuickViewModal />
       <Toaster position="bottom-right" toastOptions={{ style: { borderRadius: "9999px" } }} />
     </QueryClientProvider>
   );
 }
+
