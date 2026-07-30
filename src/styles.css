@@ -182,6 +182,36 @@
   animation: shimmer 1.6s linear infinite;
 }
 
+@keyframes ripple-out {
+  from { width: 0; height: 0; opacity: 0.45; }
+  to { width: 420px; height: 420px; opacity: 0; }
+}
+@utility ripple {
+  transform: translate(-50%, -50%);
+  background: color-mix(in oklab, currentColor 45%, transparent);
+  animation: ripple-out 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+@utility float-slow {
+  animation: float-y 6s ease-in-out infinite;
+}
+@utility float-slower {
+  animation: float-y 9s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--brand) 45%, transparent); }
+  50% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--brand) 0%, transparent); }
+}
+@utility pulse-glow {
+  animation: pulse-glow 2.4s ease-out infinite;
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
