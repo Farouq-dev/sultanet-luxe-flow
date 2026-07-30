@@ -6,6 +6,11 @@ import heroImg from "@/assets/hero.jpg";
 import { bestSellers, categories, collections, featuredBrands, newArrivals, products } from "@/lib/data";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
+import { FlashSale } from "@/components/home/FlashSale";
+import { TrustStats } from "@/components/home/TrustStats";
+import { FAQ } from "@/components/home/FAQ";
+import { Scene3DSlot } from "@/components/three/Scene3DSlot";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
