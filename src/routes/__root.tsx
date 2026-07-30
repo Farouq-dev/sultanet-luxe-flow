@@ -15,6 +15,11 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { SmoothScroll } from "../components/SmoothScroll";
 import { ScrollProgress } from "../components/ScrollProgress";
+import { AnnouncementBar } from "../components/AnnouncementBar";
+import { CartDrawer } from "../components/CartDrawer";
+import { QuickViewModal } from "../components/QuickViewModal";
+import { CursorGlow } from "../components/motion/CursorGlow";
+
 
 function NotFoundComponent() {
   return (
