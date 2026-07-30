@@ -78,8 +78,11 @@ function Checkout() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="line-clamp-1 text-sm font-medium">{i.product.name}</div>
-                  <div className="text-xs text-muted-foreground">{formatMoney(i.product.price, currency)}</div>
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    {i.gift ? (<><Gift className="h-3 w-3" /> Free gift</>) : formatMoney(i.product.price, currency)}
+                  </div>
                 </div>
+
               </li>
             ))}
           </ul>
