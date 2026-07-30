@@ -17,7 +17,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { cart, wishlist, currency, setCurrency, theme, toggleTheme } = useShop();
+  const { cart, wishlist, currency, setCurrency, theme, toggleTheme, openCart } = useShop();
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
   useEffect(() => {
