@@ -8,8 +8,9 @@ import { formatMoney } from "@/lib/currency";
 import { cn } from "@/lib/utils";
 
 export function ProductCard({ product }: { product: Product }) {
-  const { toggleWishlist, wishlist, addToCart, currency } = useShop();
+  const { toggleWishlist, wishlist, addToCart, currency, openCart, setQuickView } = useShop();
   const inWishlist = wishlist.includes(product.id);
+
   const discount = product.compareAt
     ? Math.round((1 - product.price / product.compareAt) * 100)
     : 0;
