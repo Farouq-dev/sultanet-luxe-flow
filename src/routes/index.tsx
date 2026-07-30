@@ -26,17 +26,21 @@ function Home() {
       <Marquee />
       <FeaturedCategories />
       <FeaturedProducts title="Featured" items={products.slice(0, 8)} eyebrow="Curated" />
+      <FlashSale />
       <CollectionShowcase />
       <FeaturedProducts title="Best Sellers" items={bestSellers()} eyebrow="Loved by thousands" />
+      <TrustStats />
       <WhyChoose />
       <FeaturedProducts title="New Arrivals" items={newArrivals()} eyebrow="Just landed" />
       <Reviews />
+      <FAQ />
       <Brands />
       <Newsletter />
       <Instagram />
     </>
   );
 }
+
 
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
