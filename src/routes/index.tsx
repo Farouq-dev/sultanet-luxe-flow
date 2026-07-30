@@ -58,7 +58,9 @@ function Hero() {
       <motion.div style={{ y, scale }} className="absolute inset-0">
         <img src={heroImg} alt="Premium wellness setup" className="h-full w-full object-cover" width={1600} height={1200} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#061222] via-[#061222]/60 to-transparent" />
+        <Scene3DSlot fallback={null} />
       </motion.div>
+
 
       <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-6 pb-20 pt-40 sm:pb-28">
         <motion.p
