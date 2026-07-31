@@ -15,7 +15,7 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
   return (
-    <div className="mx-auto grid min-h-[80vh] max-w-md place-items-center px-6 pb-24 pt-32">
+    <div className="mx-auto grid min-h-[80vh] max-w-md place-items-center px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-28">
       <div className="w-full">
         <h1 className="text-center font-display text-4xl">Welcome back</h1>
         <p className="mt-2 text-center text-sm text-muted-foreground">Sign in to continue your ritual.</p>

@@ -17,13 +17,13 @@ export const Route = createFileRoute("/contact")({
 
 function Contact() {
   return (
-    <div className="mx-auto max-w-6xl px-6 pb-24 pt-32">
+    <div className="mx-auto max-w-6xl px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-28">
       <Reveal>
         <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">Contact</p>
-        <h1 className="mt-3 font-display text-5xl sm:text-6xl">Talk to us.</h1>
+        <h1 className="mt-3 font-display text-3xl sm:text-6xl">Talk to us.</h1>
         <p className="mt-4 max-w-xl text-muted-foreground">Product questions, orders, wholesale — we respond within one business day.</p>
       </Reveal>
-      <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_360px]">
+      <div className="mt-8 grid sm:mt-16 gap-10 lg:grid-cols-[1fr_360px]">
         <form onSubmit={(e) => { e.preventDefault(); toast.success("Message sent — we'll be in touch shortly."); }} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <input required placeholder="Full name" className="w-full rounded-full border border-border bg-background px-5 py-3.5 text-sm focus:outline-none focus:border-foreground/40" />

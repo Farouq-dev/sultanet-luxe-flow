@@ -4,7 +4,10 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import heroImg from "@/assets/hero.jpg";
 import { bestSellers, categories, collections, featuredBrands, newArrivals, products } from "@/lib/data";
-import { ProductCard } from "@/components/ProductCard";
+import { catalog } from "@/services/catalog";
+import { useShop } from "@/stores/shop";
+import { ProductRail } from "@/components/ProductRail";
+import { TrustStrip } from "@/components/trust/TrustBadges";
 import { Reveal, Stagger, StaggerItem } from "@/components/Reveal";
 import { FlashSale } from "@/components/home/FlashSale";
 import { TrustStats } from "@/components/home/TrustStats";
@@ -25,18 +28,38 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const { recentlyViewed } = useShop();
+  const recentItems = recentlyViewed
+    .map((id) => products.find((p) => p.id === id))
+    .filter(Boolean) as typeof products;
+  const recommended = catalog.recommendations(recentlyViewed, 8);
+  const deals = products.filter((p) => p.compareAt).slice(0, 8);
+  const trending = [...products].sort((a, b) => b.reviews - a.reviews).slice(0, 8);
+  const topPicks = [...products].sort((a, b) => b.rating - a.rating).slice(0, 8);
+
   return (
     <>
       <Hero />
       <Marquee />
+      <TrustStrip />
       <FeaturedCategories />
-      <FeaturedProducts title="Featured" items={products.slice(0, 8)} eyebrow="Curated" />
+      <ProductRail eyebrow="Limited time" title="Today's Deals" items={deals} />
       <FlashSale />
+      <ProductRail eyebrow="Popular right now" title="Trending Now" items={trending} />
       <CollectionShowcase />
-      <FeaturedProducts title="Best Sellers" items={bestSellers()} eyebrow="Loved by thousands" />
+      <ProductRail eyebrow="Loved by thousands" title="Best Sellers" items={bestSellers()} />
       <TrustStats />
+      <ProductRail eyebrow="Highest rated" title="Top Picks" items={topPicks} />
       <WhyChoose />
-      <FeaturedProducts title="New Arrivals" items={newArrivals()} eyebrow="Just landed" />
+      <ProductRail eyebrow="Just landed" title="New Arrivals" items={newArrivals()} />
+      {recentItems.length > 0 && (
+        <ProductRail
+          eyebrow="Continue shopping"
+          title="Recently Viewed"
+          items={recentItems}
+        />
+      )}
+      <ProductRail eyebrow="Picked for you" title="Recommended For You" items={recommended} />
       <Reviews />
       <FAQ />
       <Brands />
@@ -46,7 +69,6 @@ function Home() {
   );
 }
 
-
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -54,7 +76,7 @@ function Hero() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
 
   return (
-    <section ref={ref} className="relative min-h-[92vh] overflow-hidden">
+    <section ref={ref} className="relative min-h-[86vh] sm:min-h-[92vh] overflow-hidden">
       <motion.div style={{ y, scale }} className="absolute inset-0">
         <img src={heroImg} alt="Premium wellness setup" className="h-full w-full object-cover" width={1600} height={1200} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#061222] via-[#061222]/60 to-transparent" />
@@ -62,7 +84,7 @@ function Hero() {
       </motion.div>
 
 
-      <div className="relative mx-auto flex min-h-[92vh] max-w-7xl flex-col justify-end px-6 pb-20 pt-40 sm:pb-28">
+      <div className="relative mx-auto flex min-h-[86vh] sm:min-h-[92vh] max-w-7xl flex-col justify-end px-4 pb-14 pt-28 sm:px-6 sm:pt-40 sm:pb-28">
         <motion.p
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
           className="text-xs font-medium uppercase tracking-[0.28em] text-white/70"
@@ -71,7 +93,7 @@ function Hero() {
         </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 max-w-3xl font-display text-5xl leading-[0.95] text-white sm:text-7xl lg:text-8xl"
+          className="mt-5 max-w-3xl font-display text-[2.6rem] leading-[0.95] text-white sm:text-7xl lg:text-8xl"
         >
           Wellness, <span className="italic text-white/80">refined.</span>
         </motion.h1>
@@ -83,7 +105,7 @@ function Hero() {
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7 }}
-          className="mt-10 flex flex-wrap items-center gap-3"
+          className="mt-8 flex flex-col gap-2.5 sm:mt-10 sm:flex-row sm:items-center sm:gap-3"
         >
           <Link to="/shop" className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-semibold text-[#123249] transition hover:bg-white/90">
             Shop the collection
@@ -114,23 +136,23 @@ function Marquee() {
 function FeaturedCategories() {
   const featured = categories.slice(0, 6);
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-24">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">Explore</p>
-            <h2 className="mt-3 font-display text-4xl sm:text-5xl">Featured categories</h2>
+            <h2 className="mt-3 font-display text-3xl sm:text-5xl">Featured categories</h2>
           </div>
           <Link to="/categories" className="text-sm font-semibold text-foreground underline underline-offset-4 hover:text-primary">View all</Link>
         </div>
       </Reveal>
-      <Stagger className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <Stagger className="mt-8 grid sm:mt-12 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {featured.map((c) => (
           <StaggerItem key={c.slug}>
             <Link
               to="/shop"
               search={{ category: c.slug }}
-              className="group relative flex h-56 flex-col justify-end overflow-hidden rounded-3xl border border-border p-7"
+              className="group relative flex h-44 flex-col sm:h-56 justify-end overflow-hidden rounded-3xl border border-border p-5 sm:p-7"
               style={{ background: "var(--gradient-hero)" }}
             >
               <div className="absolute inset-0 opacity-20 mix-blend-overlay transition-opacity duration-700 group-hover:opacity-40" style={{ background: "radial-gradient(circle at 30% 20%, #447794, transparent 60%)" }} />
@@ -146,38 +168,15 @@ function FeaturedCategories() {
   );
 }
 
-function FeaturedProducts({ title, items, eyebrow }: { title: string; items: typeof products; eyebrow: string }) {
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-16">
-      <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">{eyebrow}</p>
-            <h2 className="mt-3 font-display text-4xl sm:text-5xl">{title}</h2>
-          </div>
-          <Link to="/shop" className="text-sm font-semibold underline underline-offset-4 hover:text-primary">Shop all</Link>
-        </div>
-      </Reveal>
-      <Stagger className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {items.slice(0, 8).map((p) => (
-          <StaggerItem key={p.id}>
-            <ProductCard product={p} />
-          </StaggerItem>
-        ))}
-      </Stagger>
-    </section>
-  );
-}
-
 function CollectionShowcase() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-24">
       <div className="grid gap-6 lg:grid-cols-3">
         {collections.map((c, i) => (
           <Reveal key={c.key} delay={i * 0.08}>
             <Link
               to="/shop" search={{ collection: c.key }}
-              className="group relative flex h-[440px] flex-col justify-between overflow-hidden rounded-[2rem] p-8 text-white"
+              className="group relative flex h-[340px] sm:h-[440px] flex-col justify-between overflow-hidden rounded-[2rem] p-8 text-white"
               style={{ background: "var(--gradient-hero)" }}
             >
               <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/5 blur-3xl transition-all duration-700 group-hover:scale-125" />
@@ -205,15 +204,15 @@ function WhyChoose() {
     { icon: Leaf, title: "Considered materials", body: "OEKO-TEX cotton, natural rubber, recycled aluminum, always." },
   ];
   return (
-    <section className="border-y border-border bg-secondary/40 py-24">
+    <section className="border-y border-border bg-secondary/40 py-12 sm:py-24">
       <div className="mx-auto max-w-7xl px-6">
         <Reveal>
           <div className="max-w-2xl">
             <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">Why Sultanet</p>
-            <h2 className="mt-3 font-display text-4xl sm:text-5xl">A quieter kind of premium.</h2>
+            <h2 className="mt-3 font-display text-3xl sm:text-5xl">A quieter kind of premium.</h2>
           </div>
         </Reveal>
-        <Stagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Stagger className="mt-8 grid sm:mt-12 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {items.map(({ icon: Icon, title, body }) => (
             <StaggerItem key={title}>
               <div className="hover-lift flex h-full flex-col rounded-3xl border border-border bg-card p-7">
@@ -238,12 +237,12 @@ function Reviews() {
     { name: "Sofia K.", role: "Berlin", text: "Obsidian dumbbells replaced my entire rack. Beautiful build quality." },
   ];
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-24">
       <Reveal>
         <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">Loved worldwide</p>
-        <h2 className="mt-3 font-display text-4xl sm:text-5xl">Words from our community</h2>
+        <h2 className="mt-3 font-display text-3xl sm:text-5xl">Words from our community</h2>
       </Reveal>
-      <Stagger className="mt-12 grid gap-6 md:grid-cols-3">
+      <Stagger className="mt-8 grid sm:mt-12 gap-6 md:grid-cols-3">
         {reviews.map((r) => (
           <StaggerItem key={r.name}>
             <blockquote className="hover-lift flex h-full flex-col rounded-3xl border border-border bg-card p-8">
@@ -277,13 +276,13 @@ function Brands() {
 
 function Newsletter() {
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-24">
       <Reveal>
-        <div className="relative overflow-hidden rounded-[2.5rem] p-10 sm:p-16" style={{ background: "var(--gradient-hero)" }}>
+        <div className="relative overflow-hidden rounded-[2rem] p-6 sm:rounded-[2.5rem] sm:p-16" style={{ background: "var(--gradient-hero)" }}>
           <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#447794]/40 blur-3xl" />
           <div className="relative max-w-xl text-white">
             <p className="text-xs font-medium uppercase tracking-[0.28em] text-white/70">Join Sultanet</p>
-            <h2 className="mt-4 font-display text-4xl sm:text-5xl">Rituals, delivered to your inbox.</h2>
+            <h2 className="mt-4 font-display text-3xl sm:text-5xl">Rituals, delivered to your inbox.</h2>
             <p className="mt-4 text-white/70">Early access to new collections, guides, and 10% off your first order.</p>
             <form onSubmit={(e) => e.preventDefault()} className="mt-8 flex flex-col gap-3 sm:flex-row">
               <input type="email" required placeholder="your@email.com" className="flex-1 rounded-full border border-white/20 bg-white/10 px-6 py-4 text-white placeholder:text-white/50 backdrop-blur focus:border-white/40 focus:outline-none" />
@@ -299,16 +298,16 @@ function Newsletter() {
 function Instagram() {
   const imgs = products.slice(0, 6).map((p) => p.image);
   return (
-    <section className="mx-auto max-w-7xl px-6 pb-8">
+    <section className="mx-auto max-w-7xl px-4 pb-8 sm:px-6">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">@sultanet</p>
-            <h2 className="mt-3 font-display text-4xl sm:text-5xl">Life, considered.</h2>
+            <h2 className="mt-3 font-display text-3xl sm:text-5xl">Life, considered.</h2>
           </div>
         </div>
       </Reveal>
-      <Stagger className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <Stagger className="mt-8 grid sm:mt-10 grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {imgs.map((src, i) => (
           <StaggerItem key={i}>
             <a href="#" className="group block aspect-square overflow-hidden rounded-2xl bg-muted">

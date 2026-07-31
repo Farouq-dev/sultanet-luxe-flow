@@ -19,6 +19,8 @@ import { AnnouncementBar } from "../components/AnnouncementBar";
 import { CartDrawer } from "../components/CartDrawer";
 import { QuickViewModal } from "../components/QuickViewModal";
 import { CursorGlow } from "../components/motion/CursorGlow";
+import { BottomNav } from "../components/BottomNav";
+import { RecentPurchaseFeed } from "../components/SocialProof";
 
 
 function NotFoundComponent() {
@@ -112,17 +114,19 @@ function RootComponent() {
       <SmoothScroll />
       <ScrollProgress />
       <CursorGlow />
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-screen flex-col overflow-x-hidden">
         <AnnouncementBar />
         <Navbar />
-        <main className="flex-1">
+        <main className="flex-1 pb-[4.75rem] lg:pb-0">
           <Outlet />
         </main>
         <Footer />
       </div>
       <CartDrawer />
       <QuickViewModal />
-      <Toaster position="bottom-right" toastOptions={{ style: { borderRadius: "9999px" } }} />
+      <BottomNav />
+      <RecentPurchaseFeed />
+      <Toaster position="top-center" toastOptions={{ style: { borderRadius: "9999px" } }} />
     </QueryClientProvider>
   );
 }

@@ -21,12 +21,12 @@ function Wishlist() {
   const items = wishlist.map((id) => findProduct(id)!).filter(Boolean);
 
   return (
-    <div className="mx-auto max-w-7xl px-6 pb-24 pt-32">
+    <div className="mx-auto max-w-7xl px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-28">
       <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">Saved</p>
-      <h1 className="mt-3 font-display text-5xl sm:text-6xl">Your wishlist</h1>
+      <h1 className="mt-3 font-display text-3xl sm:text-6xl">Your wishlist</h1>
 
       {items.length === 0 ? (
-        <div className="mt-16 grid place-items-center rounded-3xl border border-dashed border-border p-16 text-center">
+        <div className="mt-8 grid sm:mt-16 place-items-center rounded-3xl border border-dashed border-border p-8 text-center sm:p-16">
           <div>
             <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-accent"><Heart className="h-6 w-6" /></div>
             <p className="mt-5 font-display text-2xl">Nothing saved yet.</p>
@@ -35,7 +35,7 @@ function Wishlist() {
           </div>
         </div>
       ) : (
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {items.map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
       )}
