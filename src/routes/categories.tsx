@@ -17,13 +17,13 @@ export const Route = createFileRoute("/categories")({
 
 function Categories() {
   return (
-    <div className="mx-auto max-w-7xl px-6 pb-24 pt-32">
-      <header className="mb-16">
+    <div className="mx-auto max-w-7xl px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-28">
+      <header className="mb-8 sm:mb-16">
         <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">Categories</p>
-        <h1 className="mt-3 font-display text-5xl sm:text-6xl">Everything, organized.</h1>
+        <h1 className="mt-3 font-display text-3xl sm:text-6xl">Everything, organized.</h1>
       </header>
       {collections.map((c) => (
-        <section key={c.key} className="mb-20">
+        <section key={c.key} className="mb-10 sm:mb-20">
           <Reveal>
             <div className="mb-6 flex items-end justify-between">
               <div>

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { CreditCard, Lock, Gift } from "lucide-react";
 import { toast } from "sonner";
 import { useShop } from "@/stores/shop";
+import { FreeGiftProgress } from "@/components/FreeGiftProgress";
+import { TrustBadges, FreeShippingBadge } from "@/components/trust/TrustBadges";
 import { useCart } from "@/hooks/useCart";
 import { formatMoney } from "@/lib/currency";
 
@@ -21,7 +23,7 @@ export const Route = createFileRoute("/checkout")({
 function Checkout() {
   const { clearCart } = useShop();
   const navigate = useNavigate();
-  const { items, subtotal, shipping, total, currency } = useCart();
+  const { items, subtotal, shipping, total, currency, progress } = useCart();
   const [loading, setLoading] = useState(false);
 
   const submit = (e: React.FormEvent) => {
@@ -36,10 +38,17 @@ function Checkout() {
 
 
   return (
-    <div className="mx-auto max-w-6xl px-6 pb-24 pt-32">
-      <h1 className="font-display text-5xl">Checkout</h1>
-      <form onSubmit={submit} className="mt-12 grid gap-10 lg:grid-cols-[1fr_360px]">
-        <div className="space-y-10">
+    <div className="mx-auto max-w-6xl px-4 pb-32 pt-16 sm:px-6 sm:pb-24 sm:pt-24 lg:pb-24">
+      <h1 className="font-display text-3xl sm:text-5xl">Checkout</h1>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <FreeShippingBadge />
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-[11px] font-semibold text-accent-foreground">
+          <Lock className="h-3.5 w-3.5" /> Secure encrypted checkout
+        </span>
+      </div>
+      <FreeGiftProgress {...progress} subtotal={subtotal} className="mt-4" />
+      <form onSubmit={submit} className="mt-6 grid gap-6 sm:mt-10 lg:grid-cols-[1fr_360px] lg:gap-10">
+        <div className="space-y-7 sm:space-y-10">
           <Section title="Contact">
             <Field label="Email" type="email" required placeholder="you@example.com" />
           </Section>
@@ -67,7 +76,7 @@ function Checkout() {
             </div>
           </Section>
         </div>
-        <aside className="h-fit rounded-3xl border border-border bg-card p-6">
+        <aside className="h-fit rounded-3xl border border-border bg-card p-4 sm:p-6">
           <h2 className="font-display text-xl">Order</h2>
           <ul className="mt-4 space-y-3">
             {items.map((i) => (
@@ -91,10 +100,20 @@ function Checkout() {
             <div className="flex justify-between text-muted-foreground"><span>Shipping</span><span className="text-foreground">{shipping === 0 ? "Free" : formatMoney(shipping, currency)}</span></div>
             <div className="flex items-baseline justify-between border-t border-border pt-3 text-base font-semibold"><span>Total</span><span className="font-display text-xl">{formatMoney(total, currency)}</span></div>
           </div>
-          <button disabled={loading || items.length === 0} className="mt-6 w-full rounded-full bg-primary px-6 py-4 text-sm font-semibold text-primary-foreground disabled:opacity-60 hover:bg-primary/90">
+          <button disabled={loading || items.length === 0} className="mt-6 hidden min-h-14 w-full rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground disabled:opacity-60 hover:bg-primary/90 lg:block">
             {loading ? "Placing order…" : `Pay ${formatMoney(total, currency)}`}
           </button>
+          <TrustBadges className="mt-5" />
         </aside>
+
+        <div className="glass fixed inset-x-0 bottom-[4.5rem] z-[58] border-t border-border px-3 py-2.5 lg:hidden">
+          <button
+            disabled={loading || items.length === 0}
+            className="flex min-h-13 w-full items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground shadow-elegant transition active:scale-[0.98] disabled:opacity-60"
+          >
+            {loading ? "Placing order…" : `Pay ${formatMoney(total, currency)} securely`}
+          </button>
+        </div>
       </form>
     </div>
   );
@@ -103,7 +122,7 @@ function Checkout() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
-      <h2 className="font-display text-2xl">{title}</h2>
+      <h2 className="font-display text-xl sm:text-2xl">{title}</h2>
       <div className="mt-4">{children}</div>
     </section>
   );
@@ -113,7 +132,7 @@ function Field({ label, className = "", icon, ...props }: React.InputHTMLAttribu
   return (
     <label className={`block ${className}`}>
       <span className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">{label}</span>
-      <span className="mt-2 flex items-center gap-2 rounded-full border border-border bg-background px-5 py-3">
+      <span className="mt-2 flex items-center gap-2 min-h-12 rounded-full border border-border bg-background px-5">
         {icon}
         <input {...props} className="w-full bg-transparent text-sm focus:outline-none" />
       </span>

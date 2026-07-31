@@ -24,10 +24,10 @@ function OrderTracking() {
     { icon: PackageCheck, label: "Delivered", body: "Enjoy your ritual" },
   ];
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-24 pt-32">
+    <div className="mx-auto max-w-3xl px-4 pb-16 pt-16 sm:px-6 sm:pb-24 sm:pt-28">
       <Reveal>
         <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">Order #SN-284019</p>
-        <h1 className="mt-3 font-display text-5xl">Your order is on the way.</h1>
+        <h1 className="mt-3 font-display text-3xl sm:text-5xl">Your order is on the way.</h1>
       </Reveal>
 
       <ol className="mt-12 space-y-4">
