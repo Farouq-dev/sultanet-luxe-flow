@@ -19,7 +19,9 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>("fitness");
+
   const { cart, wishlist, currency, setCurrency, theme, toggleTheme, openCart } = useShop();
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
