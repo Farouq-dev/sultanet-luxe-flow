@@ -54,9 +54,53 @@ function ProductPage() {
       </nav>
 
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="overflow-hidden rounded-3xl border border-border bg-muted sm:rounded-[2rem]">
-          <img src={product.image} alt={product.name} width={900} height={900} className="h-full w-full object-cover" />
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <div
+            className="group relative aspect-square overflow-hidden rounded-3xl border border-border bg-muted sm:rounded-[2rem]"
+            onMouseMove={(e) => {
+              const r = e.currentTarget.getBoundingClientRect();
+              setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 });
+            }}
+            onMouseLeave={() => setZoom(null)}
+          >
+            <img
+              src={gallery[active]}
+              alt={product.name}
+              width={1200}
+              height={1200}
+              className="h-full w-full object-cover transition-transform duration-500 ease-out will-change-transform"
+              style={
+                zoom
+                  ? { transform: "scale(1.9)", transformOrigin: `${zoom.x}% ${zoom.y}%` }
+                  : undefined
+              }
+            />
+            {discount > 0 && (
+              <span className="absolute left-3 top-3 rounded-full bg-destructive px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-destructive-foreground">
+                −{discount}%
+              </span>
+            )}
+          </div>
+
+          {gallery.length > 1 && (
+            <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+              {gallery.map((src, i) => (
+                <button
+                  key={src + i}
+                  onClick={() => setActive(i)}
+                  aria-label={`View image ${i + 1}`}
+                  className={cn(
+                    "h-16 w-16 shrink-0 overflow-hidden rounded-2xl border transition sm:h-20 sm:w-20",
+                    i === active ? "border-primary" : "border-border opacity-70",
+                  )}
+                >
+                  <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
         </motion.div>
+
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
           <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">{product.brand}</p>
