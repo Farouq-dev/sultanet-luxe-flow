@@ -132,7 +132,7 @@ export function ProductReviews({ product }: { product: Product }) {
         </ul>
       </div>
 
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]{display:none}">
+      <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
         {filters.map((f) => (
           <button
             key={String(f.key)}
