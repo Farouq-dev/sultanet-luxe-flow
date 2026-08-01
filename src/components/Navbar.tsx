@@ -227,6 +227,9 @@ export function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      <SearchDrawer open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
+
   );
 }
