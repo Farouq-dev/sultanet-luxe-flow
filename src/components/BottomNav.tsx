@@ -10,7 +10,7 @@ const ITEMS = [
   { to: "/search", label: "Search", icon: Search },
   { to: "/wishlist", label: "Wishlist", icon: Heart },
   { to: "/cart", label: "Cart", icon: ShoppingBag },
-  { to: "/login", label: "Profile", icon: User },
+  { to: "/account", label: "Profile", icon: User },
 ] as const;
 
 /** Premium mobile bottom navigation with an animated active indicator. */

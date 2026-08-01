@@ -102,7 +102,7 @@ export function Navbar() {
                 <span className="absolute -right-0.5 -top-0.5 grid h-4 w-4 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">{wishlist.length}</span>
               )}
             </Link>
-            <Link to="/login" aria-label="Account" className="hidden h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent hover:text-foreground lg:grid">
+            <Link to="/account" aria-label="Account" className="hidden h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent hover:text-foreground lg:grid">
               <User className="h-5 w-5" />
             </Link>
             <button onClick={openCart} aria-label="Cart" className="relative grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground">
