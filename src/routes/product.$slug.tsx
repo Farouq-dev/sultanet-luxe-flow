@@ -235,3 +235,12 @@ function Perk({ icon: Icon, label, body }: { icon: React.ComponentType<{ classNa
     </div>
   );
 }
+
+function Spec({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b border-border py-1.5 text-sm">
+      <dt className="text-muted-foreground">{k}</dt>
+      <dd className="truncate font-medium capitalize">{v}</dd>
+    </div>
+  );
+}
