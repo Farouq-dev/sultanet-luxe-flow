@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useShop } from "@/stores/shop";
 import { CURRENCIES } from "@/lib/currency";
 import { MegaMenu } from "@/components/MegaMenu";
+import { SearchDrawer } from "@/components/SearchDrawer";
+
 import { collections, categories } from "@/lib/data";
 
 const nav = [
@@ -19,7 +21,9 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>("fitness");
+
   const { cart, wishlist, currency, setCurrency, theme, toggleTheme, openCart } = useShop();
   const cartCount = cart.reduce((s, i) => s + i.qty, 0);
 
@@ -80,9 +84,15 @@ export function Navbar() {
                 <option key={c.code} value={c.code}>{c.code}</option>
               ))}
             </select>
-            <Link to="/search" aria-label="Search" className="grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground">
+            {/* Search lives in the drawer / search page / bottom nav — no desktop nav icon. */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+              className="grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground lg:hidden"
+            >
               <Search className="h-5 w-5" />
-            </Link>
+            </button>
+
             <button onClick={toggleTheme} aria-label="Toggle theme" className="grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground">
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
@@ -92,7 +102,7 @@ export function Navbar() {
                 <span className="absolute -right-0.5 -top-0.5 grid h-4 w-4 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">{wishlist.length}</span>
               )}
             </Link>
-            <Link to="/login" aria-label="Account" className="hidden h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent hover:text-foreground lg:grid">
+            <Link to="/account" aria-label="Account" className="hidden h-10 w-10 place-items-center rounded-full text-foreground/80 transition hover:bg-accent hover:text-foreground lg:grid">
               <User className="h-5 w-5" />
             </Link>
             <button onClick={openCart} aria-label="Cart" className="relative grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground">
@@ -219,6 +229,9 @@ export function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      <SearchDrawer open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
+
   );
 }
