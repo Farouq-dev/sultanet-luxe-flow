@@ -50,7 +50,8 @@ const TILES = [
 function Account() {
   const { wishlist, recentlyViewed, currency } = useShop();
   const recent = (recentlyViewed ?? [])
-    .map((slug) => catalog.getProductBySlug(slug))
+    .map((id) => catalog.getProductById(id))
+
     .filter((p): p is NonNullable<typeof p> => Boolean(p))
     .slice(0, 4);
 
