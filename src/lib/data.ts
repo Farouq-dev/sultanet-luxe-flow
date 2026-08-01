@@ -28,7 +28,10 @@ export interface Product {
   compareAt?: number;
   rating: number;
   reviews: number;
+  /** Units sold — merchandising / social proof. */
+  sold?: number;
   stock: number;
+
   image: string;
   gallery?: string[];
   collection: Collection;
