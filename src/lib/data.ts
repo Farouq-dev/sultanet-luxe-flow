@@ -173,3 +173,23 @@ export function bestSellers() {
 export function flashSales() {
   return products.filter((p) => p.tags.includes("flash"));
 }
+
+/**
+ * Derived merchandising fields (deterministic so SSR and client agree).
+ * A Shopify migration replaces this with metafields / `totalInventory`.
+ */
+products.forEach((p, i) => {
+  p.sold = p.sold ?? Math.round(p.reviews * (7 + (i % 5)));
+  if (!p.gallery || p.gallery.length < 2) {
+    const others = products.filter((o) => o.id !== p.id && o.collection === p.collection);
+    p.gallery = [p.image, ...others.slice(0, 3).map((o) => o.image)];
+  }
+});
+
+/** Accessories eligible as the "Buy 5, get 1 free" reward. */
+export const giftAccessorySlugs = [
+  "flex-band-set",
+  "silk-eclipse-sleep-mask",
+  "trigger-point-roller",
+  "aroma-halo-diffuser",
+] as const;
