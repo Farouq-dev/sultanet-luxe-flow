@@ -136,7 +136,13 @@ function ProductPage() {
           </div>
           <LiveViewers productId={product.id} className="mt-3" />
           <LimitedStock stock={product.stock} className="mt-3" />
+          <Countdown compact className="mt-4" />
+          <p className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-secondary px-3.5 py-2.5 text-xs font-medium">
+            <Truck className="h-4 w-4 shrink-0 text-primary" />
+            Free worldwide delivery · estimated {deliveryEstimate}
+          </p>
           <p className="mt-5 text-sm leading-relaxed text-muted-foreground sm:text-base">{product.description}</p>
+
 
           <ul className="mt-6 grid gap-2">
             {product.features.map((f: string) => (
