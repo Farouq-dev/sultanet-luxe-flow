@@ -1,11 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { Heart, Plus, Eye, Star } from "lucide-react";
+import { Heart, Plus, Eye, Star, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/data";
 import { useShop } from "@/stores/shop";
 import { formatMoney } from "@/lib/currency";
 import { cn } from "@/lib/utils";
+
+function compact(n: number) {
+  if (n >= 1000) return `${(n / 1000).toFixed(n >= 10_000 ? 0 : 1)}k`;
+  return String(n);
+}
 
 /**
  * Mobile-first product card.
@@ -41,7 +46,8 @@ export function ProductCard({ product }: { product: Product }) {
           height={900}
           loading="lazy"
           decoding="async"
-          className="h-full w-full object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-105"
+          className="h-full w-full object-cover opacity-0 transition-[transform,opacity] duration-700 ease-out will-change-transform group-hover:scale-105"
+          onLoad={(e) => e.currentTarget.classList.remove("opacity-0")}
         />
 
         <div className="absolute inset-x-2 top-2 flex items-start justify-between gap-1.5 sm:inset-x-3 sm:top-3">
@@ -51,14 +57,14 @@ export function ProductCard({ product }: { product: Product }) {
                 −{discount}%
               </span>
             )}
-            {product.tags.includes("new") && (
+            {product.tags.includes("best") && (
               <span className="rounded-full bg-primary px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-foreground sm:text-[10px]">
-                New
+                Best seller
               </span>
             )}
-            {product.tags.includes("best") && (
+            {product.tags.includes("new") && (
               <span className="glass rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider sm:text-[10px]">
-                Best seller
+                New
               </span>
             )}
           </div>
@@ -110,6 +116,9 @@ export function ProductCard({ product }: { product: Product }) {
           <Star className="h-3 w-3 shrink-0 fill-amber-400 text-amber-400" />
           <span className="font-semibold text-foreground">{product.rating}</span>
           <span className="truncate">({product.reviews.toLocaleString()})</span>
+          {product.sold ? (
+            <span className="ml-auto shrink-0 tabular-nums">{compact(product.sold)} sold</span>
+          ) : null}
         </div>
         <p className="truncate text-[10px] font-medium uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px]">
           {product.brand}
@@ -130,10 +139,13 @@ export function ProductCard({ product }: { product: Product }) {
               </span>
             )}
           </div>
+          <p className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-primary sm:text-[11px]">
+            <Truck className="h-3 w-3" /> Free shipping
+          </p>
           <p
             className={cn(
-              "mt-1 text-[10px] font-semibold sm:text-[11px]",
-              soldOut ? "text-muted-foreground" : product.stock <= 10 ? "text-destructive" : "text-primary",
+              "mt-0.5 text-[10px] font-semibold sm:text-[11px]",
+              soldOut ? "text-muted-foreground" : product.stock <= 10 ? "text-destructive" : "text-muted-foreground",
             )}
           >
             {soldOut ? "Sold out" : product.stock <= 10 ? `Only ${product.stock} left` : "In stock"}
