@@ -3,10 +3,13 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const MESSAGES = [
   { icon: "🚚", text: "Free Worldwide Shipping" },
-  { icon: "🎁", text: "Free Premium Yoga Mat on Orders Above $500" },
-  { icon: "⭐", text: "Premium Quality Guaranteed" },
+  { icon: "🎁", text: "Spend $500+ and receive a FREE Premium Yoga Mat" },
+  { icon: "🎉", text: "Buy 5 eligible products and receive 1 FREE accessory" },
+  { icon: "🔥", text: "Save Up To 30% On Selected Products" },
   { icon: "🔒", text: "Secure Checkout" },
+  { icon: "⭐", text: "Premium Quality Guaranteed" },
 ];
+
 
 export function AnnouncementBar() {
   const [i, setI] = useState(0);
