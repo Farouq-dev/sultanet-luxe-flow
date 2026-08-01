@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useShop } from "@/stores/shop";
 import { CURRENCIES } from "@/lib/currency";
 import { MegaMenu } from "@/components/MegaMenu";
+import { SearchDrawer } from "@/components/SearchDrawer";
+
 import { collections, categories } from "@/lib/data";
 
 const nav = [
