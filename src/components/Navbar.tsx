@@ -80,9 +80,15 @@ export function Navbar() {
                 <option key={c.code} value={c.code}>{c.code}</option>
               ))}
             </select>
-            <Link to="/search" aria-label="Search" className="grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground">
+            {/* Search lives in the drawer / search page / bottom nav — no desktop nav icon. */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+              className="grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground lg:hidden"
+            >
               <Search className="h-5 w-5" />
-            </Link>
+            </button>
+
             <button onClick={toggleTheme} aria-label="Toggle theme" className="grid h-10 w-10 place-items-center rounded-full text-foreground/80 transition active:scale-90 hover:bg-accent hover:text-foreground">
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
