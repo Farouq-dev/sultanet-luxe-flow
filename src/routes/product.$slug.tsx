@@ -109,11 +109,17 @@ function ProductPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.15 }}>
           <p className="text-xs font-medium uppercase tracking-[0.28em] text-muted-foreground">{product.brand}</p>
           <h1 className="mt-2 font-display text-[1.75rem] leading-tight sm:text-5xl">{product.name}</h1>
-          <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
             <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
             <span className="font-medium text-foreground">{product.rating}</span>
-            <span>({product.reviews.toLocaleString()} reviews)</span>
+            <a href="#reviews" className="underline-offset-4 hover:underline">
+              ({product.reviews.toLocaleString()} reviews)
+            </a>
+            {product.sold ? (
+              <span className="tabular-nums">· {product.sold.toLocaleString()} sold</span>
+            ) : null}
           </div>
+
           <div className="mt-4 flex flex-wrap items-baseline gap-3 sm:mt-6">
             <span className="font-display text-3xl sm:text-4xl">{formatMoney(product.price, currency)}</span>
             {product.compareAt && (
