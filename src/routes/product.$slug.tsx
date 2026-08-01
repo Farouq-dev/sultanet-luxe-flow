@@ -38,6 +38,10 @@ function ProductPage() {
   const { product } = Route.useLoaderData();
   const { currency, addToCart, toggleWishlist, wishlist, addRecent, openCart } = useShop();
   const [qty, setQty] = useState(1);
+  const [active, setActive] = useState(0);
+  const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
+  const gallery: string[] = product.gallery?.length ? product.gallery : [product.image];
+
   const inWishlist = wishlist.includes(product.id);
   const discount = product.compareAt ? Math.round((1 - product.price / product.compareAt) * 100) : 0;
   const alsoBought = catalog.recommendations([product.id], 8);
