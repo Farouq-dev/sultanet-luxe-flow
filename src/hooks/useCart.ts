@@ -2,10 +2,18 @@ import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { catalog } from "@/services/catalog";
 import { useShop } from "@/stores/shop";
-import { FREE_GIFT, freeGiftProduct, giftProgress } from "@/lib/promo";
+import {
+  BUY_X_GET_1,
+  FREE_GIFT,
+  accessoryRewardFor,
+  buyFiveProgress,
+  freeGiftProduct,
+  giftProgress,
+} from "@/lib/promo";
 
 /**
- * Single source of truth for cart maths + the free-gift promotion.
+ * Single source of truth for cart maths + the promotions
+ * (spend $500 → free yoga mat, buy 5 → free accessory).
  * Swap the `catalog` calls for Shopify cart lines later; the shape stays.
  */
 export function useCart() {
@@ -19,35 +27,66 @@ export function useCart() {
     [cart],
   );
 
-  const paidSubtotal = items.reduce((s, i) => s + (i.gift ? 0 : i.product.price * i.qty), 0);
+  const paidLines = items.filter((i) => !i.gift);
+  const paidSubtotal = paidLines.reduce((s, i) => s + i.product.price * i.qty, 0);
   const subtotal = paidSubtotal;
-  const shipping = subtotal > 150 || subtotal === 0 ? 0 : 12;
-  const total = subtotal + shipping;
+  const shipping = 0; // free worldwide shipping on every order
+  const total = subtotal;
   const count = items.reduce((s, i) => s + i.qty, 0);
+  const paidUnits = paidLines.reduce((s, i) => s + i.qty, 0);
   const savings = items.reduce(
     (s, i) => s + (i.product.compareAt ? (i.product.compareAt - i.product.price) * i.qty : 0),
     0,
   );
 
   const progress = giftProgress(subtotal);
+  const bulkProgress = buyFiveProgress(paidUnits);
 
-  // Auto-manage the free gift line.
   const gift = freeGiftProduct();
-  const announced = useRef(false);
-  useEffect(() => {
-    if (!gift) return;
-    const giftLine = cart.find((l) => l.productId === gift.id && l.gift);
-    if (progress.unlocked && !giftLine) {
-      addGift(gift.id);
-      if (!announced.current) {
-        announced.current = true;
-        toast.success(`Unlocked: a free ${FREE_GIFT.label} was added to your cart.`);
-      }
-    } else if (!progress.unlocked && giftLine) {
-      removeGift(gift.id);
-      announced.current = false;
-    }
-  }, [progress.unlocked, cart, gift, addGift, removeGift]);
+  const reward = accessoryRewardFor(paidLines.map((l) => l.product.id));
+  const rewardName = reward?.name;
 
-  return { items, subtotal, shipping, total, count, savings, currency, progress, updateQty, removeFromCart };
+  // Auto-manage promotional gift lines.
+  const announcedGift = useRef(false);
+  const announcedBulk = useRef(false);
+  useEffect(() => {
+    const expected = new Set<string>();
+    if (progress.unlocked && gift) expected.add(gift.id);
+    if (bulkProgress.unlocked && reward && !expected.has(reward.id)) expected.add(reward.id);
+
+    for (const line of cart) {
+      if (line.gift && !expected.has(line.productId)) removeGift(line.productId);
+    }
+    for (const id of expected) {
+      if (!cart.some((l) => l.productId === id && l.gift)) addGift(id);
+    }
+
+    if (progress.unlocked && !announcedGift.current) {
+      announcedGift.current = true;
+      toast.success(`🎁 FREE ${FREE_GIFT.label} unlocked and added to your cart.`);
+    }
+    if (!progress.unlocked) announcedGift.current = false;
+
+    if (bulkProgress.unlocked && !announcedBulk.current) {
+      announcedBulk.current = true;
+      toast.success(`🎉 ${BUY_X_GET_1.quantity} items — your FREE ${rewardName ?? "accessory"} is on us.`);
+    }
+    if (!bulkProgress.unlocked) announcedBulk.current = false;
+  }, [progress.unlocked, bulkProgress.unlocked, cart, gift, reward, rewardName, addGift, removeGift]);
+
+  return {
+    items,
+    subtotal,
+    shipping,
+    total,
+    count,
+    paidUnits,
+    savings,
+    currency,
+    progress,
+    bulkProgress,
+    rewardName,
+    updateQty,
+    removeFromCart,
+  };
 }
