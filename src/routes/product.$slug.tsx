@@ -187,12 +187,25 @@ function ProductPage() {
         </motion.div>
       </div>
 
-      <div className="mt-10 sm:mt-16">
+      <div className="mt-10 space-y-6 sm:mt-16 sm:space-y-8">
         <BundleSave product={product} />
+        <section className="rounded-3xl border border-border bg-card p-4 sm:p-6">
+          <h2 className="font-display text-2xl sm:text-3xl">Specifications</h2>
+          <dl className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+            <Spec k="Brand" v={product.brand} />
+            <Spec k="Collection" v={product.collection} />
+            <Spec k="Category" v={product.category} />
+            <Spec k="Rating" v={`${product.rating} / 5`} />
+            <Spec k="Shipping" v="Free worldwide" />
+            <Spec k="Delivery" v={deliveryEstimate} />
+          </dl>
+        </section>
+        <ProductReviews product={product} />
       </div>
 
       <ProductRail eyebrow="Customers also bought" title="Frequently paired" items={alsoBought} />
       <ProductRail eyebrow="More like this" title="You may also love" items={related} />
+
 
       {/* Sticky mobile add-to-cart */}
       <div className="glass fixed inset-x-0 bottom-[4.5rem] z-[58] flex items-center gap-3 border-t border-border px-3 py-2.5 lg:hidden">
