@@ -8,6 +8,10 @@ import { useShop } from "@/stores/shop";
 import { formatMoney } from "@/lib/currency";
 import { ProductRail } from "@/components/ProductRail";
 import { BundleSave } from "@/components/BundleSave";
+import { Countdown } from "@/components/promo/Countdown";
+import { ProductReviews } from "@/components/ProductReviews";
+import { deliveryEstimate } from "@/lib/delivery";
+
 import { LiveViewers, LimitedStock } from "@/components/SocialProof";
 import { TrustBadges, FreeShippingBadge } from "@/components/trust/TrustBadges";
 import { catalog } from "@/services/catalog";
